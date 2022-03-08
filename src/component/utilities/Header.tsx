@@ -22,15 +22,15 @@ export const Header = () => {
   };
   return (
     <AppBar position="fixed">
-      <Toolbar>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
         <Typography
           variant="h1"
-          sx={{ fontSize: "1.5rem", flex: 1 }}
+          sx={{ fontSize: "1.5rem" }}
           onClick={() => {
             navigate("/");
           }}
         >
-          限界辞典
+          GenkaiDictionary
         </Typography>
         <IconButton color="inherit" onClick={handleClick}>
           <MenuIcon />
