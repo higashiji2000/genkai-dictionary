@@ -15,7 +15,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="search" element={<Search />} />
         <Route path="view" element={<View />}>
-          <Route path=":first" element={<ViewTables />} />
+          <Route path=":firstLetter" element={<ViewTables />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

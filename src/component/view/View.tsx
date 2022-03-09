@@ -1,12 +1,14 @@
 import { Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import { Outlet, useOutletContext, Link } from "react-router-dom";
+import { Outlet, useOutletContext, Link, useParams } from "react-router-dom";
 
 type ContextType = {
   col: string[];
 };
 
 export const View = () => {
+  const currentUrl = useParams();
+  console.log(currentUrl);
   const [value, setValue] = useState<number>(0);
 
   const handleChange = (
@@ -29,6 +31,11 @@ export const View = () => {
     ["わ", "を"],
   ];
 
+  // urlの末尾と一文字目が合う配列を絞り込み
+  const selectedCol = jpSyllabary.find(
+    (col) => col[0] === currentUrl.firstLetter
+  );
+
   return (
     <>
       <Tabs
@@ -43,7 +50,7 @@ export const View = () => {
           <Tab label={col[0]} to={col[0]} component={Link} key={index}></Tab>
         ))}
       </Tabs>
-      <Outlet context={{ col: jpSyllabary[value] }} />
+      <Outlet context={{ col: selectedCol }} />
     </>
   );
 };
