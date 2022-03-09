@@ -9,8 +9,6 @@ import {
 } from "@mui/material";
 import { WordData } from "./ViewTables";
 
-const rows = ["hoge", "hog", "ho"];
-
 type Props = {
   wordArray: WordData[] | undefined;
 };

@@ -14,50 +14,48 @@ export type WordData = {
 
 export const ViewTables = () => {
   const { col } = useCol();
-  const [wordArray, setWordArray] = useState<WordData[][]>([
-    [],
-    [],
-    [],
-    [],
-    [],
-  ]);
+  //["あ","い","う","え","お"] みたいな配列
+  const [wordArray, setWordArray] = useState<WordData[][]>([]);
 
   useEffect(() => {
     const wordsRef = collection(db, "words");
     const q = query(wordsRef, where("first", "in", col));
 
-    const orderedArray: WordData[][] = [[], [], [], [], []];
-
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      console.log("subscribe");
+      const wordDataArrays: WordData[][] = [[], [], [], [], []];
       querySnapshot.forEach((doc) => {
         const wordData = doc.data() as WordData;
         switch (wordData.first) {
           case col[0]:
-            orderedArray[0].push(wordData);
+            wordDataArrays[0].push(wordData);
             break;
           case col[1]:
-            orderedArray[1].push(wordData);
+            wordDataArrays[1].push(wordData);
             break;
           case col[2]:
-            orderedArray[2].push(wordData);
+            wordDataArrays[2].push(wordData);
             break;
           case col[3]:
-            orderedArray[3].push(wordData);
+            wordDataArrays[3].push(wordData);
             break;
           case col[4]:
-            orderedArray[4].push(wordData);
+            wordDataArrays[4].push(wordData);
             break;
           default:
             console.log("default");
             break;
         }
       });
+      //昇順にソートした新たな配列の配列を作成
+      const orderedArray: WordData[][] = wordDataArrays.map((array) =>
+        array.sort((a, b) => a.length - b.length)
+      );
       console.log(orderedArray);
       setWordArray(orderedArray);
     });
     return () => {
       unsubscribe();
-      //恐ろしいので残しています
       console.log("unsub");
     };
   }, [col]);
