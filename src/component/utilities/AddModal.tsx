@@ -1,42 +1,55 @@
 /** @jsxImportSource @emotion/react */
 import { Modal, Box, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { css } from "@mui/material/styles";
+import { db } from "../../firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 type Props = {
   open: boolean;
   handleClose: () => void;
 };
 
+type FormValues = {
+  word: string;
+};
+
 export const AddModal = (props: Props) => {
   const { open, handleClose } = props;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ shouldUnregister: true, reValidateMode: "onSubmit" });
+  } = useForm<FormValues>({
+    shouldUnregister: true,
+    reValidateMode: "onSubmit",
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    await addDoc(collection(db, "words"), {
+      first: data.word.slice(0, 1),
+      last:
+        data.word.slice(-1) === "ー"
+          ? data.word.slice(-2, -1)
+          : data.word.slice(-1),
+      length: data.word.length,
+      word: data.word,
+    });
+    handleClose();
+  };
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={modalStyle}>
         <Typography align="center">単語追加</Typography>
-        <form
-          action="submit"
-          onSubmit={handleSubmit(
-            (data) => {
-              console.log(data);
-            },
-            (data) => {
-              console.log("error" + data);
-            }
-          )}
-          css={form}
-        >
+        <form action="submit" onSubmit={handleSubmit(onSubmit)} css={form}>
           <input
             type="text"
             {...register("word", {
               required: "入力必須です",
               pattern: {
-                value: /^[あ-ん]+$/,
+                value: /^[あ-んゔー]+$/,
                 message: "ひらがなのみ入力可能です",
               },
             })}
@@ -65,4 +78,6 @@ const modalStyle = {
 
 const form = css`
   display: flex;
+  margin-top: 16px;
+  gap: 8px;
 `;

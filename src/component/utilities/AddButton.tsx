@@ -1,7 +1,7 @@
 import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
-import { AddModal } from "./addModal";
+import { AddModal } from "./AddModal";
 
 export const AddButton = () => {
   const [open, setOpen] = useState<boolean>(false);
