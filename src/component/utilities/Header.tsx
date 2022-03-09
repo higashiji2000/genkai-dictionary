@@ -51,7 +51,7 @@ export const Header = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                navigate("view");
+                navigate("view/あ");
                 handleClose();
               }}
             >
