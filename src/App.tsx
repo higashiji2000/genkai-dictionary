@@ -13,7 +13,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="search" element={<Search />} />
-        <Route path="view" element={<View />} />
+        <Route path="view" element={<View />}>
+          <Route path=":first" />
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
