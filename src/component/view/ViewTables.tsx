@@ -13,8 +13,9 @@ export type WordData = {
 };
 
 export const ViewTables = () => {
-  const { col } = useCol();
   //["あ","い","う","え","お"] みたいな配列
+  const { col } = useCol();
+
   const [wordArray, setWordArray] = useState<WordData[][]>([]);
 
   useEffect(() => {

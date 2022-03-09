@@ -20,10 +20,10 @@ export const ViewTable = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell component={"th"}>word</TableCell>
-            <TableCell component={"th"} align="right">
+            <TableCell component={"th"} align="center" sx={{ width: "80px" }}>
               length
             </TableCell>
-            <TableCell component={"th"} align="right">
+            <TableCell component={"th"} align="center" sx={{ width: "50px" }}>
               delete
             </TableCell>
           </TableRow>
@@ -36,8 +36,8 @@ export const ViewTable = (props: Props) => {
                 sx={{ "&:last-child td": { border: 0 } }}
               >
                 <TableCell>{word.word}</TableCell>
-                <TableCell align="right">{word.length}</TableCell>
-                <TableCell align="right">delete</TableCell>
+                <TableCell align="center">{word.length}</TableCell>
+                <TableCell align="center">delete</TableCell>
               </TableRow>
             ))}
         </TableBody>
