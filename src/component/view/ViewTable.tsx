@@ -8,7 +8,7 @@ import {
   Paper,
 } from "@mui/material";
 
-const rows = ["hoge", "hoge", "hoge"];
+const rows = ["hoge", "hog", "ho"];
 
 export const ViewTable = () => {
   return (

@@ -1,9 +1,28 @@
+import { useEffect } from "react";
 import { useCol } from "./View";
 import { ViewTable } from "./ViewTable";
 import { Typography } from "@mui/material";
+import { collection, onSnapshot, where, query } from "firebase/firestore";
+import { db } from "../../firebase";
 
 export const ViewTables = () => {
   const { col } = useCol();
+
+  useEffect(() => {
+    const wordsRef = collection(db, "words");
+    const q = query(wordsRef, where("first", "in", col));
+    console.log(q);
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+      });
+    });
+    return () => {
+      unsubscribe();
+      //恐ろしいので残しています
+      console.log("unsub");
+    };
+  }, [col]);
 
   return (
     <>
