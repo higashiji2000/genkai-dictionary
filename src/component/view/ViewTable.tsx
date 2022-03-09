@@ -7,10 +7,15 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { WordData } from "./ViewTables";
 
 const rows = ["hoge", "hog", "ho"];
 
-export const ViewTable = () => {
+type Props = {
+  wordArray: WordData[] | undefined;
+};
+
+export const ViewTable = (props: Props) => {
   return (
     <TableContainer component={Paper}>
       <Table size="small" aria-label="a dense table">
@@ -26,13 +31,17 @@ export const ViewTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row} sx={{ "&:last-child td": { border: 0 } }}>
-              <TableCell>{row}</TableCell>
-              <TableCell align="right">{row}</TableCell>
-              <TableCell align="right">delete</TableCell>
-            </TableRow>
-          ))}
+          {props.wordArray &&
+            props.wordArray.map((word) => (
+              <TableRow
+                key={word.word}
+                sx={{ "&:last-child td": { border: 0 } }}
+              >
+                <TableCell>{word.word}</TableCell>
+                <TableCell align="right">{word.length}</TableCell>
+                <TableCell align="right">delete</TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
