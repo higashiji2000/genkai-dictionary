@@ -26,7 +26,6 @@ export const ViewTables = (props: { col: string[] }) => {
     const q = query(wordsRef, where("first", "in", col));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      console.log("subscribe");
       const wordDataArrays: WordDocWithId[][] = [[], [], [], [], []];
       const wordDataArray: WordDocWithId[] = querySnapshot.docs.map((doc) => {
         const wordDoc = doc.data() as WordDoc;
@@ -59,13 +58,9 @@ export const ViewTables = (props: { col: string[] }) => {
       const orderedArray: WordDocWithId[][] = wordDataArrays.map((array) =>
         array.sort((a, b) => a.length - b.length)
       );
-      console.log(orderedArray);
       setWordArray(orderedArray);
     });
-    return () => {
-      unsubscribe();
-      console.log("unsub");
-    };
+    return unsubscribe;
   }, [col]);
 
   return (

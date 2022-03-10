@@ -220,7 +220,13 @@ export const Search = () => {
           fullWidth
           variant="contained"
           color="inherit"
-          sx={{ mt: 2, mb: 4 }}
+          sx={{
+            mt: 2,
+            mb: 4,
+            color: "primary.main",
+            bgcolor: "black",
+            "&:hover": { bgcolor: "black" },
+          }}
         >
           Search
         </Button>
