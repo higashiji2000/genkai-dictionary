@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -27,6 +27,7 @@ type Query = {
 };
 
 export const Search = () => {
+  const [formData, setFormData] = useState<Query>();
   const [wordArray, setWordArray] = useState<WordDocWithId[]>([]);
   const {
     control,
@@ -34,29 +35,34 @@ export const Search = () => {
     formState: { errors },
   } = useForm<Query>({ criteriaMode: "all" });
 
-  const wordsRef = collection(db, "words");
-
-  const onSubmit = async (data: Query) => {
+  useEffect(() => {
     const queryOptions = [];
-    if (data.first) {
-      queryOptions.push(where("first", "==", data.first));
+    if (formData?.first) {
+      queryOptions.push(where("first", "==", formData.first));
     }
-    if (data.last) {
-      queryOptions.push(where("last", "==", data.last));
+    if (formData?.last) {
+      queryOptions.push(where("last", "==", formData?.last));
     }
-    if (data.wordCount) {
-      data.isPlus
-        ? queryOptions.push(where("length", ">=", data.wordCount))
-        : queryOptions.push(where("length", "==", data.wordCount));
+    if (formData?.wordCount) {
+      formData?.isPlus
+        ? queryOptions.push(where("length", ">=", formData?.wordCount))
+        : queryOptions.push(where("length", "==", formData?.wordCount));
     }
+    const wordsRef = collection(db, "words");
     const q = query(wordsRef, ...queryOptions);
+    (async () => {
+      const querySnapshot = await getDocs(q);
+      const wordDataArray: WordDocWithId[] = querySnapshot.docs.map((doc) => {
+        const wordDoc = doc.data() as WordDoc;
+        return { ...wordDoc, id: doc.id };
+      });
+      setWordArray(wordDataArray);
+    })();
+    return console.log("unmount");
+  }, [formData]);
 
-    const querySnapshot = await getDocs(q);
-    const wordDataArray: WordDocWithId[] = querySnapshot.docs.map((doc) => {
-      const wordDoc = doc.data() as WordDoc;
-      return { ...wordDoc, id: doc.id };
-    });
-    setWordArray(wordDataArray);
+  const onSubmit = (data: Query) => {
+    setFormData(data);
   };
 
   return (
