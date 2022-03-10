@@ -1,13 +1,14 @@
 import { Tab, Tabs } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Outlet, useOutletContext, Link, useParams } from "react-router-dom";
+import { useOutletContext, Link, useParams } from "react-router-dom";
+import { ViewTables } from "./ViewTables";
 
 type ContextType = {
   col: string[];
 };
 
 export const View = () => {
-  const currentUrl = useParams();
+  const currentUrl = useParams<{ firstLetter: string }>();
   const [value, setValue] = useState<string>(currentUrl.firstLetter ?? "あ");
 
   useEffect(() => {
@@ -52,14 +53,14 @@ export const View = () => {
         {jpSyllabary.map((col, index) => (
           <Tab
             label={col[0]}
-            to={col[0]}
+            to={`/view/${col[0]}`}
             value={col[0]}
             component={Link}
             key={index}
           ></Tab>
         ))}
       </Tabs>
-      <Outlet context={{ col: selectedCol }} />
+      {selectedCol && <ViewTables col={selectedCol} />}
     </>
   );
 };

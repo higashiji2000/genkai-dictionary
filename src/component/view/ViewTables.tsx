@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useCol } from "./View";
 import { ViewTable } from "./ViewTable";
 import { Typography } from "@mui/material";
 import { collection, onSnapshot, where, query } from "firebase/firestore";
@@ -12,9 +11,9 @@ export type WordData = {
   word: string;
 };
 
-export const ViewTables = () => {
+export const ViewTables = (props: { col: string[] }) => {
   //["あ","い","う","え","お"] みたいな配列
-  const { col } = useCol();
+  const { col } = props;
 
   const [wordArray, setWordArray] = useState<WordData[][]>([]);
 

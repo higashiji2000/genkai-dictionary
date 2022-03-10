@@ -4,7 +4,6 @@ import { Search } from "./component/search/Search";
 import { Header } from "./component/utilities/Header";
 import { View } from "./component/view/View";
 import { AddButton } from "./component/utilities/AddButton";
-import { ViewTables } from "./component/view/ViewTables";
 
 const App = () => {
   return (
@@ -14,9 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="search" element={<Search />} />
-        <Route path="view" element={<View />}>
-          <Route path=":firstLetter" element={<ViewTables />} />
-        </Route>
+        <Route path="view/:firstLetter" element={<View />}></Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
