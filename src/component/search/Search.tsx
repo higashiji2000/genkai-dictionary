@@ -39,6 +39,9 @@ export const Search = () => {
   useEffect(() => {
     // 初回は早期return
     if (!formData) return;
+
+    const wordsRef = collection(db, "words");
+    // formの内容からクエリを作成
     const queryOptions = [];
     if (formData?.first) {
       queryOptions.push(where("first", "==", formData.first));
@@ -51,14 +54,16 @@ export const Search = () => {
         ? queryOptions.push(where("length", ">=", formData?.wordCount))
         : queryOptions.push(where("length", "==", formData?.wordCount));
     }
-    const wordsRef = collection(db, "words");
     const q = query(wordsRef, ...queryOptions);
     const unSubscribe = onSnapshot(q, (querySnapshot) => {
       const wordDataArray: WordDocWithId[] = querySnapshot.docs.map((doc) => {
         const wordDoc = doc.data() as WordDoc;
         return { ...wordDoc, id: doc.id };
       });
-      setWordArray(wordDataArray);
+      const SortedArray = wordDataArray
+        .slice()
+        .sort((a, b) => a.length - b.length);
+      setWordArray(SortedArray);
     });
     return unSubscribe;
   }, [formData]);
