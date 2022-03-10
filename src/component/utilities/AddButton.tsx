@@ -14,6 +14,7 @@ export const AddButton = () => {
           position: "fixed",
           bottom: 24,
           right: 24,
+          zIndex: 1,
         }}
         onClick={() => {
           setOpen(true);
