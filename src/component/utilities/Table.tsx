@@ -11,7 +11,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { WordDocWithId } from "./ViewTables";
+import { WordDocWithId } from "../view/ViewTables";
 
 type Props = {
   wordArray: WordDocWithId[] | undefined;
@@ -24,7 +24,7 @@ const handleDelete = (id: string) => {
   }
 };
 
-export const ViewTable = (props: Props) => {
+const MyTable = (props: Props) => {
   return (
     <TableContainer component={Paper}>
       <Table size="small" aria-label="a dense table">
@@ -60,3 +60,5 @@ export const ViewTable = (props: Props) => {
     </TableContainer>
   );
 };
+
+export { MyTable as Table };
