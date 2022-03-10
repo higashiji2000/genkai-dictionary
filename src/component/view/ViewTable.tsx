@@ -7,10 +7,10 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { WordData } from "./ViewTables";
+import { WordDocWithId } from "./ViewTables";
 
 type Props = {
-  wordArray: WordData[] | undefined;
+  wordArray: WordDocWithId[] | undefined;
 };
 
 export const ViewTable = (props: Props) => {

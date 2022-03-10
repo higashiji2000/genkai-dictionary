@@ -4,18 +4,22 @@ import { Typography } from "@mui/material";
 import { collection, onSnapshot, where, query } from "firebase/firestore";
 import { db } from "../../firebase";
 
-export type WordData = {
+export type WordDoc = {
   first: string;
   last: string;
   length: number;
   word: string;
 };
 
+export type WordDocWithId = WordDoc & {
+  id: string;
+};
+
 export const ViewTables = (props: { col: string[] }) => {
   //["あ","い","う","え","お"] みたいな配列
   const { col } = props;
 
-  const [wordArray, setWordArray] = useState<WordData[][]>([]);
+  const [wordArray, setWordArray] = useState<WordDocWithId[][]>([]);
 
   useEffect(() => {
     const wordsRef = collection(db, "words");
@@ -23,24 +27,28 @@ export const ViewTables = (props: { col: string[] }) => {
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       console.log("subscribe");
-      const wordDataArrays: WordData[][] = [[], [], [], [], []];
-      querySnapshot.forEach((doc) => {
-        const wordData = doc.data() as WordData;
-        switch (wordData.first) {
+      const wordDataArrays: WordDocWithId[][] = [[], [], [], [], []];
+      const wordDataArray: WordDocWithId[] = querySnapshot.docs.map((doc) => {
+        const wordDoc = doc.data() as WordDoc;
+        return { ...wordDoc, id: doc.id };
+      });
+      console.log(wordDataArray);
+      wordDataArray.forEach((doc) => {
+        switch (doc.first) {
           case col[0]:
-            wordDataArrays[0].push(wordData);
+            wordDataArrays[0].push(doc);
             break;
           case col[1]:
-            wordDataArrays[1].push(wordData);
+            wordDataArrays[1].push(doc);
             break;
           case col[2]:
-            wordDataArrays[2].push(wordData);
+            wordDataArrays[2].push(doc);
             break;
           case col[3]:
-            wordDataArrays[3].push(wordData);
+            wordDataArrays[3].push(doc);
             break;
           case col[4]:
-            wordDataArrays[4].push(wordData);
+            wordDataArrays[4].push(doc);
             break;
           default:
             console.log("default");
@@ -48,7 +56,7 @@ export const ViewTables = (props: { col: string[] }) => {
         }
       });
       //昇順にソートした新たな配列の配列を作成
-      const orderedArray: WordData[][] = wordDataArrays.map((array) =>
+      const orderedArray: WordDocWithId[][] = wordDataArrays.map((array) =>
         array.sort((a, b) => a.length - b.length)
       );
       console.log(orderedArray);
