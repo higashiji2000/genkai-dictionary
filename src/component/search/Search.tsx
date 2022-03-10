@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Container,
   Typography,
@@ -13,20 +14,53 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../firebase";
+import { WordDoc, WordDocWithId } from "../view/ViewTables";
+import { Table } from "../utilities/Table";
+
+type Query = {
+  first?: string;
+  isPlus: boolean;
+  last?: string;
+  wordCount: number;
+};
 
 export const Search = () => {
+  const [wordArray, setWordArray] = useState<WordDocWithId[]>([]);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({ criteriaMode: "all" });
+  } = useForm<Query>({ criteriaMode: "all" });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const wordsRef = collection(db, "words");
+
+  const onSubmit = async (data: Query) => {
+    const queryOptions = [];
+    if (data.first) {
+      queryOptions.push(where("first", "==", data.first));
+    }
+    if (data.last) {
+      queryOptions.push(where("last", "==", data.last));
+    }
+    if (data.wordCount) {
+      data.isPlus
+        ? queryOptions.push(where("length", ">=", data.wordCount))
+        : queryOptions.push(where("length", "==", data.wordCount));
+    }
+    const q = query(wordsRef, ...queryOptions);
+
+    const querySnapshot = await getDocs(q);
+    const wordDataArray: WordDocWithId[] = querySnapshot.docs.map((doc) => {
+      const wordDoc = doc.data() as WordDoc;
+      return { ...wordDoc, id: doc.id };
+    });
+    setWordArray(wordDataArray);
   };
 
   return (
-    <Container>
+    <Container sx={{ pb: 10 }}>
       <Typography variant="h2" align="center" sx={{ fontSize: "2rem", p: 3 }}>
         Search
       </Typography>
@@ -181,6 +215,7 @@ export const Search = () => {
       <Typography variant="h3" align="center" sx={{ fontSize: "1.5rem", p: 3 }}>
         Result
       </Typography>
+      {wordArray[0] && <Table wordArray={wordArray} />}
     </Container>
   );
 };
