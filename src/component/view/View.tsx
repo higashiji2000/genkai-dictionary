@@ -1,11 +1,7 @@
 import { Tab, Tabs } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useOutletContext, Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ViewTables } from "./ViewTables";
-
-type ContextType = {
-  col: string[];
-};
 
 export const View = () => {
   const currentUrl = useParams<{ firstLetter: string }>();
@@ -63,8 +59,4 @@ export const View = () => {
       {selectedCol && <ViewTables col={selectedCol} />}
     </>
   );
-};
-
-export const useCol = () => {
-  return useOutletContext<ContextType>();
 };
