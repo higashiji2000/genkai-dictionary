@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import { WordDoc, WordDocWithId } from "../view/ViewTables";
 import { Table } from "../utilities/Table";
@@ -29,6 +29,7 @@ type Query = {
 export const Search = () => {
   const [formData, setFormData] = useState<Query>();
   const [wordArray, setWordArray] = useState<WordDocWithId[]>([]);
+
   const {
     control,
     handleSubmit,
@@ -36,6 +37,8 @@ export const Search = () => {
   } = useForm<Query>({ criteriaMode: "all" });
 
   useEffect(() => {
+    // 初回は早期return
+    if (!formData) return;
     const queryOptions = [];
     if (formData?.first) {
       queryOptions.push(where("first", "==", formData.first));
@@ -50,15 +53,14 @@ export const Search = () => {
     }
     const wordsRef = collection(db, "words");
     const q = query(wordsRef, ...queryOptions);
-    (async () => {
-      const querySnapshot = await getDocs(q);
+    const unSubscribe = onSnapshot(q, (querySnapshot) => {
       const wordDataArray: WordDocWithId[] = querySnapshot.docs.map((doc) => {
         const wordDoc = doc.data() as WordDoc;
         return { ...wordDoc, id: doc.id };
       });
       setWordArray(wordDataArray);
-    })();
-    return console.log("unmount");
+    });
+    return unSubscribe;
   }, [formData]);
 
   const onSubmit = (data: Query) => {
