@@ -6,11 +6,22 @@ import {
   TableHead,
   TableRow,
   Paper,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../firebase";
 import { WordDocWithId } from "./ViewTables";
 
 type Props = {
   wordArray: WordDocWithId[] | undefined;
+};
+
+const handleDelete = (id: string) => {
+  const result = window.confirm("本当に消しますか");
+  if (result === true) {
+    deleteDoc(doc(db, "words", id));
+  }
 };
 
 export const ViewTable = (props: Props) => {
@@ -37,7 +48,11 @@ export const ViewTable = (props: Props) => {
               >
                 <TableCell>{word.word}</TableCell>
                 <TableCell align="center">{word.length}</TableCell>
-                <TableCell align="center">delete</TableCell>
+                <TableCell align="center">
+                  <IconButton onClick={() => handleDelete(word.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>
