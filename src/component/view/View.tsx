@@ -1,5 +1,5 @@
 import { Tab, Tabs } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useOutletContext, Link, useParams } from "react-router-dom";
 
 type ContextType = {
@@ -8,12 +8,15 @@ type ContextType = {
 
 export const View = () => {
   const currentUrl = useParams();
-  console.log(currentUrl);
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState<string>(currentUrl.firstLetter ?? "あ");
+
+  useEffect(() => {
+    setValue(currentUrl.firstLetter ?? "あ");
+  }, [currentUrl]);
 
   const handleChange = (
     event: React.SyntheticEvent<Element, Event>,
-    value: number
+    value: string
   ) => {
     setValue(value);
   };
@@ -47,7 +50,13 @@ export const View = () => {
         sx={{ mt: "56px" }}
       >
         {jpSyllabary.map((col, index) => (
-          <Tab label={col[0]} to={col[0]} component={Link} key={index}></Tab>
+          <Tab
+            label={col[0]}
+            to={col[0]}
+            value={col[0]}
+            component={Link}
+            key={index}
+          ></Tab>
         ))}
       </Tabs>
       <Outlet context={{ col: selectedCol }} />
