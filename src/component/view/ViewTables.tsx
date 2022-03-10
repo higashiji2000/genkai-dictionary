@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ViewTable } from "./ViewTable";
+import { Table } from "../utilities/Table";
 import { Typography } from "@mui/material";
 import { collection, onSnapshot, where, query } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -78,7 +78,7 @@ export const ViewTables = (props: { col: string[] }) => {
           >
             {letter}
           </Typography>
-          <ViewTable wordArray={wordArray[index]}></ViewTable>
+          <Table wordArray={wordArray[index]} />
         </div>
       ))}
     </>
