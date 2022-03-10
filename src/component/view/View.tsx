@@ -1,4 +1,4 @@
-import { Tab, Tabs } from "@mui/material";
+import { Tab, Tabs, Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ViewTables } from "./ViewTables";
@@ -56,7 +56,9 @@ export const View = () => {
           ></Tab>
         ))}
       </Tabs>
-      {selectedCol && <ViewTables col={selectedCol} />}
+      <Container sx={{ pb: 10 }}>
+        {selectedCol && <ViewTables col={selectedCol} />}
+      </Container>
     </>
   );
 };
